@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { fetchAllList } from '../services/services';
+import { fetchAllLists } from '../services/services';
 
-export default class Dashboard extends Component {
+export class Dashboard extends Component {
   state = {
     listOfLists: [],
   };
@@ -12,12 +12,13 @@ export default class Dashboard extends Component {
   }
 
   getAllLists = async () => {
-    const listOfLists = await fetchAllList();
+    const { data: listOfLists } = await fetchAllLists();
     this.setState({ listOfLists });
   };
 
   render() {
     const { listOfLists } = this.state;
+    console.log(listOfLists);
     return (
       <div>
         <div>
@@ -25,8 +26,8 @@ export default class Dashboard extends Component {
         </div>
 
         <div>
-          {listOfLists.map(list => (
-            <div>{list}</div>
+          {listOfLists.map(({ _id: listID, name: listName }) => (
+            <div key={listID}>{listName}</div>
           ))}
         </div>
       </div>

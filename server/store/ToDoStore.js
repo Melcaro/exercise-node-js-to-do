@@ -17,7 +17,7 @@ async function initializeDB() {
 
 async function removeDB() {
   try {
-    return await db.collection('toDos').drop({});
+    return await db.dropDatabase();
   } catch (e) {
     console.log(e);
   }
@@ -25,10 +25,58 @@ async function removeDB() {
 
 async function addLists(lists) {
   try {
-    return await db.collection('toDos').insertMany(lists);
+    return await db.collection('toDoLists').insertMany(lists);
   } catch (e) {
     console.log(e);
   }
 }
 
-module.exports = { initializeDB, removeDB, addLists };
+async function getLists() {
+  try {
+    return await db
+      .collection('toDoLists')
+      .find()
+      .toArray();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addOneTask(task) {
+  try {
+    return await db.collection('tasks').insertOne(task);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addManyTasks(tasks) {
+  try {
+    return await db.collection('tasks').insertMany(tasks);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getTasks() {
+  try {
+    return await db
+      .collection('tasks')
+      .find()
+      .toArray();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+initializeDB();
+
+module.exports = {
+  initializeDB,
+  removeDB,
+  addLists,
+  getLists,
+  addOneTask,
+  addManyTasks,
+  getTasks,
+};
