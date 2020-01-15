@@ -70,6 +70,22 @@ async function getTasks() {
   }
 }
 
+async function addANewList(listName) {
+  try {
+    return await db.collection('toDoLists').insertOne(listName);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addANewTask(newTask) {
+  try {
+    return await db.collection('tasks').insertOne(newTask);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 initializeDB();
 
 module.exports = {
@@ -80,4 +96,6 @@ module.exports = {
   addOneTask,
   addManyTasks,
   getTasks,
+  addANewList,
+  addANewTask,
 };

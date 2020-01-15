@@ -12,4 +12,9 @@ async function getListsWithTasks(req, res) {
   res.json(listsWithTasks);
 }
 
-module.exports = { getListsWithTasks };
+async function addAList(req, res) {
+  await ToDoStore.addANewList(req.body);
+  return res.status(201);
+}
+
+module.exports = { getListsWithTasks, addAList };
