@@ -63,6 +63,7 @@ async function getTasks() {
     return await db
       .collection('tasks')
       .find()
+      .sort({ listID: 1 })
       .toArray();
   } catch (e) {
     console.log(e);
