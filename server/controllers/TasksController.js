@@ -6,4 +6,10 @@ async function addATask(req, res) {
   res.sendStatus(201);
 }
 
-module.exports = { addATask };
+async function deleteATask(req, res) {
+  const { taskID } = req.params;
+  await ToDoStore.removeATask(taskID)
+  return res.sendStatus(204);
+}
+
+module.exports = { addATask, deleteATask };

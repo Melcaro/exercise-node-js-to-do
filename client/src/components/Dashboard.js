@@ -5,6 +5,7 @@ import {
   addAList,
   addATask,
   deleteList,
+  deleteTask,
 } from '../services/services';
 import { List } from './List';
 
@@ -73,12 +74,16 @@ export class Dashboard extends Component {
     this.setState({ listOfLists, shouldRender: false });
   };
 
-  deleteAList = async listID => {
+  deleteAList = listID => {
     deleteList(listID);
     this.setState({ shouldRender: true });
   };
 
-  
+  deleteATask = taskID => {
+    console.log('taskID', taskID);
+    deleteTask(taskID);
+    this.setState({ shouldRender: true });
+  };
 
   render() {
     const {
@@ -101,6 +106,7 @@ export class Dashboard extends Component {
               listName={listName}
               tasks={tasks}
               deleteAList={this.deleteAList.bind(null, listID)}
+              deleteATask={this.deleteATask}
             />
           ))}
         </div>

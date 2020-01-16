@@ -18,3 +18,7 @@ export async function addATask(taskName, listID) {
 export async function deleteList(listID) {
   return await axios.delete(`/api/v1/todos/${listID}`);
 }
+
+export async function deleteTask(taskID) {
+  return await axios.delete(`/api/v1/tasks/${taskID}`);
+}

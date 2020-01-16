@@ -96,6 +96,14 @@ async function removeAList(listID) {
   }
 }
 
+async function removeATask(taskID) {
+  try {
+    return await db.collection('tasks').deleteOne({ _id: ObjectId(taskID) });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 initializeDB();
 
 module.exports = {
@@ -109,4 +117,5 @@ module.exports = {
   addANewList,
   addANewTask,
   removeAList,
+  removeATask,
 };
