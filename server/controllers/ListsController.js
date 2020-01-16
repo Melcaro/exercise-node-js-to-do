@@ -14,7 +14,12 @@ async function getListsWithTasks(req, res) {
 
 async function addAList(req, res) {
   await ToDoStore.addANewList(req.body);
-  return res.status(201);
+  return res.sendStatus(201);
 }
 
-module.exports = { getListsWithTasks, addAList };
+async function deleteAList(req, res) {
+  const { listID } = req.params;
+  await ToDoStore.removeAList(listID);
+  return res.sendStatus(204);
+}
+module.exports = { getListsWithTasks, addAList, deleteAList };

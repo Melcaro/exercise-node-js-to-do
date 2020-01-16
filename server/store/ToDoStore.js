@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectID;
 const auth = require('../services/auth');
 
 const url = 'mongodb://192.168.99.100:27018';
@@ -86,6 +86,16 @@ async function addANewTask(newTask) {
   }
 }
 
+async function removeAList(listID) {
+  try {
+    return await db
+      .collection('toDoLists')
+      .deleteOne({ _id: ObjectId(listID) });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 initializeDB();
 
 module.exports = {
@@ -98,4 +108,5 @@ module.exports = {
   getTasks,
   addANewList,
   addANewTask,
+  removeAList,
 };

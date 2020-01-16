@@ -14,3 +14,7 @@ export async function addATask(taskName, listID) {
     listID,
   });
 }
+
+export async function deleteList(listID) {
+  return await axios.delete(`/api/v1/todos/${listID}`);
+}

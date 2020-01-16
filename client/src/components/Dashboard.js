@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
-import { fetchAllLists, addAList, addATask } from '../services/services';
+import {
+  fetchAllLists,
+  addAList,
+  addATask,
+  deleteList,
+} from '../services/services';
 import { List } from './List';
 
 export class Dashboard extends Component {
@@ -14,6 +19,7 @@ export class Dashboard extends Component {
       newList: '',
       newTask: '',
       selectedList: '',
+      shouldRender: false,
     };
   }
 
@@ -21,12 +27,12 @@ export class Dashboard extends Component {
     this.getAllLists();
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { listOfLists } = this.state;
-  //   if (listOfLists !== prevState.listOfLists) {
-  //     this.getAllLists();
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    const { shouldRender } = this.state;
+    if (shouldRender !== prevState.shouldRender) {
+      this.getAllLists();
+    }
+  }
 
   completeListForm = e => {
     this.setState({ wantToAddAList: true });
@@ -36,10 +42,11 @@ export class Dashboard extends Component {
     this.setState({ newList: value });
   };
 
-  sendAList = e => {
+  sendAList = async e => {
     e.preventDefault();
     const { newList } = this.state;
-    addAList(newList);
+    await addAList(newList);
+    this.setState({ shouldRender: true });
   };
 
   completeTaskForm = e => {
@@ -51,19 +58,27 @@ export class Dashboard extends Component {
   };
 
   setSelectedList = ({ target: { value } }) => {
-    console.log(value);
+    this.setState({ selectedList: value });
   };
 
   sendATask = e => {
     e.preventDefault();
     const { newTask, selectedList } = this.state;
     addATask(newTask, selectedList);
+    this.setState({ shouldRender: true });
   };
 
   getAllLists = async () => {
     const { data: listOfLists } = await fetchAllLists();
-    this.setState({ listOfLists });
+    this.setState({ listOfLists, shouldRender: false });
   };
+
+  deleteAList = async listID => {
+    deleteList(listID);
+    this.setState({ shouldRender: true });
+  };
+
+  
 
   render() {
     const {
@@ -72,6 +87,7 @@ export class Dashboard extends Component {
       wantToAddATask,
       selectedList,
     } = this.state;
+    console.log(selectedList);
     return (
       <div>
         <div>
@@ -80,7 +96,12 @@ export class Dashboard extends Component {
 
         <div>
           {listOfLists.map(({ _id: listID, name: listName, tasks }) => (
-            <List listID={listID} listName={listName} tasks={tasks} />
+            <List
+              listID={listID}
+              listName={listName}
+              tasks={tasks}
+              deleteAList={this.deleteAList.bind(null, listID)}
+            />
           ))}
         </div>
 
@@ -115,6 +136,7 @@ export class Dashboard extends Component {
                 onChange={this.setSelectedList}
                 value={selectedList}
               >
+                <option selected>Chose a list</option>
                 {listOfLists.map(({ _id: listID, name: listName }) => (
                   <option key={listID} value={listID}>
                     {listName}
