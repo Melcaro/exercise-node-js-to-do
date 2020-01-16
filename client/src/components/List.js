@@ -9,6 +9,7 @@ export const List = ({ listID, listName, tasks, deleteAList, deleteATask }) => {
       <div>
         {tasks.map(({ _id: taskID, description, listID }) => (
           <Task
+            key={taskID}
             taskID={taskID}
             description={description}
             listID={listID}

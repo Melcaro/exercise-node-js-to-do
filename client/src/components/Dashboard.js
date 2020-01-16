@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 
-import {
-  fetchAllLists,
-  addAList,
-  addATask,
-  deleteList,
-  deleteTask,
-} from '../services/services';
+import { fetchAllLists, deleteList, deleteTask } from '../services/services';
+
+import { Header } from './Header';
 import { List } from './List';
+import { ButtonsToAddContent } from './ButtonsToAddContent';
 
 export class Dashboard extends Component {
   constructor(props) {
@@ -15,11 +12,6 @@ export class Dashboard extends Component {
 
     this.state = {
       listOfLists: [],
-      wantToAddAList: false,
-      wantToAddATask: false,
-      newList: '',
-      newTask: '',
-      selectedList: '',
       shouldRender: false,
     };
   }
@@ -35,40 +27,6 @@ export class Dashboard extends Component {
     }
   }
 
-  completeListForm = e => {
-    this.setState({ wantToAddAList: true });
-  };
-
-  setNewList = ({ target: { value } }) => {
-    this.setState({ newList: value });
-  };
-
-  sendAList = async e => {
-    e.preventDefault();
-    const { newList } = this.state;
-    await addAList(newList);
-    this.setState({ shouldRender: true });
-  };
-
-  completeTaskForm = e => {
-    this.setState({ wantToAddATask: true });
-  };
-
-  setNewTask = ({ target: { value } }) => {
-    this.setState({ newTask: value });
-  };
-
-  setSelectedList = ({ target: { value } }) => {
-    this.setState({ selectedList: value });
-  };
-
-  sendATask = e => {
-    e.preventDefault();
-    const { newTask, selectedList } = this.state;
-    addATask(newTask, selectedList);
-    this.setState({ shouldRender: true });
-  };
-
   getAllLists = async () => {
     const { data: listOfLists } = await fetchAllLists();
     this.setState({ listOfLists, shouldRender: false });
@@ -76,32 +34,27 @@ export class Dashboard extends Component {
 
   deleteAList = listID => {
     deleteList(listID);
-    this.setState({ shouldRender: true });
+    this.toggleState();
   };
 
   deleteATask = taskID => {
-    console.log('taskID', taskID);
     deleteTask(taskID);
-    this.setState({ shouldRender: true });
+    this.toggleState();
   };
 
+  toggleState = () => {
+    this.setState({ shouldRender: true });
+  };
   render() {
-    const {
-      listOfLists,
-      wantToAddAList,
-      wantToAddATask,
-      selectedList,
-    } = this.state;
-    console.log(selectedList);
+    const { listOfLists } = this.state;
     return (
       <div>
-        <div>
-          <h1>TO DO LISTS WITH NODE, DOCKER AND MONGO</h1>
-        </div>
+        <Header />
 
         <div>
           {listOfLists.map(({ _id: listID, name: listName, tasks }) => (
             <List
+              key={listID}
               listID={listID}
               listName={listName}
               tasks={tasks}
@@ -110,53 +63,10 @@ export class Dashboard extends Component {
             />
           ))}
         </div>
-
-        <div>
-          <button onClick={this.completeListForm}>Add a list</button>
-
-          {wantToAddAList && (
-            <form>
-              <input
-                type="text"
-                placeholder="Enter the name of the list"
-                onChange={this.setNewList}
-              />
-              <input
-                type="submit"
-                value="Send"
-                onClick={this.sendAList}
-              ></input>
-            </form>
-          )}
-
-          <button onClick={this.completeTaskForm}>Add a task</button>
-          {wantToAddATask && (
-            <form>
-              <input
-                type="text"
-                placeholder="Enter the name of the task"
-                onChange={this.setNewTask}
-              />
-              <select
-                name="listsSelection"
-                onChange={this.setSelectedList}
-                value={selectedList}
-              >
-                <option selected>Chose a list</option>
-                {listOfLists.map(({ _id: listID, name: listName }) => (
-                  <option key={listID} value={listID}>
-                    {listName}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="submit"
-                value="Send"
-                onClick={this.sendATask}
-              ></input>
-            </form>
-          )}
-        </div>
+        <ButtonsToAddContent
+          listOfLists={listOfLists}
+          toggleState={this.toggleState}
+        />
       </div>
     );
   }

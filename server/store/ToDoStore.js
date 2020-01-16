@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const auth = require('../services/auth');
 
 const url = 'mongodb://192.168.99.100:27018';
@@ -31,9 +31,9 @@ async function addLists(lists) {
   }
 }
 
-async function getLists() {
+function getLists() {
   try {
-    return await db
+    return db
       .collection('toDoLists')
       .find()
       .toArray();
@@ -58,9 +58,9 @@ async function addManyTasks(tasks) {
   }
 }
 
-async function getTasks() {
+function getTasks() {
   try {
-    return await db
+    return db
       .collection('tasks')
       .find()
       .sort({ listID: 1 })
